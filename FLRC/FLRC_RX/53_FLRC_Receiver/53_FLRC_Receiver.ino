@@ -44,56 +44,60 @@ int16_t  PacketRSSI;                             //stores RSSI of received packe
 
 void loop()
 {
-  digitalWrite(PIN_D3, HIGH);  // D3 Up
-
-  RXPacketL = LT.receive(RXBUFFER, RXBUFFER_SIZE, 60000, WAIT_RX); //wait for a packet to arrive with 60seconds (60000mS) timeout
   
-  digitalWrite(PIN_D3, LOW);  // D3 Up
+ RXPacketL = LT.receive(RXBUFFER, RXBUFFER_SIZE, 1000, WAIT_RX); //wait for a packet to arrive with 60seconds (60000mS) timeout
+  
 
   //digitalWrite(LED1, HIGH);                      //something has happened
+  //Serial.println(RXPacketL, DEC);
+  //PacketRSSI = LT.readPacketRSSI();              //read the recived RSSI value
+//if (RXPacketL == 127) 
+ {
+    digitalWrite(PIN_D3, HIGH);  // D3 Up
+    digitalWrite(PIN_D3, LOW);  // D3 Up
+ }
 
-  PacketRSSI = LT.readPacketRSSI();              //read the recived RSSI value
-
-  if (RXPacketL == 0)                            //if the LT.receive() function detects an error, RXpacketL == 0
-  {
-    packet_is_Error();
-  }
-  else
-  {
-    packet_is_OK();
-  }
+  
+  //if (RXPacketL == 0)                            //if the LT.receive() function detects an error, RXpacketL == 0
+  //{
+  //  packet_is_Error();
+  //}
+  //else
+  //{
+    //packet_is_OK();
+  //}
 
   //digitalWrite(LED1, LOW);                        //LED off
 
-  Serial.println();
+  //
 }
 
 
 void packet_is_OK()
 {
-  uint16_t IRQStatus, localCRC;
+  //uint16_t IRQStatus, localCRC;
 
-  IRQStatus = LT.readIrqStatus();                  //read the LoRa device IRQ status register
+  //IRQStatus = LT.readIrqStatus();                  //read the LoRa device IRQ status register
 
-  RXpacketCount++;
+  //RXpacketCount++;
 
-  printElapsedTime();                              //print elapsed time to Serial Monitor
-  Serial.print(F("  "));
-  LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
-
-  localCRC = LT.CRCCCITT(RXBUFFER, RXPacketL, 0xFFFF);  //calculate the CRC, this is the external CRC calculation of the RXBUFFER
-  Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
-  Serial.print(localCRC, HEX);
-  Serial.print(F(",RSSI,"));
-  Serial.print(PacketRSSI);
-  Serial.print(F("dB,Length,"));
-  Serial.print(RXPacketL);
-  Serial.print(F(",Packets,"));
-  Serial.print(RXpacketCount);
-  Serial.print(F(",Errors,"));
-  Serial.print(errors);
-  Serial.print(F(",IRQreg,"));
-  Serial.print(IRQStatus, HEX);
+   //printElapsedTime();                              //print elapsed time to Serial Monitor
+  //Serial.print(F("  "));
+  //LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
+  //
+  //localCRC = LT.CRCCCITT(RXBUFFER, RXPacketL, 0xFFFF);  //calculate the CRC, this is the external CRC calculation of the RXBUFFER
+ // Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
+  //Serial.print(localCRC, HEX);
+  //Serial.print(F(",RSSI,"));
+  //Serial.print(PacketRSSI);
+  //Serial.print(F("dB,Length,"));
+  //Serial.print(RXPacketL);
+  //Serial.print(F(",Packets,"));
+  //Serial.println(RXpacketCount);
+  //Serial.print(F(",Errors,"));
+  //Serial.print(errors);
+  //Serial.print(F(",IRQreg,"));
+  //Serial.print(IRQStatus, HEX);
 }
 
 
