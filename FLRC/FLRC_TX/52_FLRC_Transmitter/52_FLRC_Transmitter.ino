@@ -31,43 +31,45 @@ SX128XLT LT;                                                   //create a librar
 uint8_t TXPacketL;
 uint32_t TXPacketCount, startmS, endmS;
 
-uint8_t buff[] = "Hello World 1234567890";
+uint8_t buff[127];
 
 #define PIN_D3 0   // GPIO0 (D3 on Wemos D1 mini)
 
 void loop()
 {
-  Serial.print(TXpower);                                       //print the transmit power defined
-  Serial.print(F("dBm "));
-  Serial.print(F("Packet> "));
-  Serial.flush();
+  //Serial.print(TXpower);                                       //print the transmit power defined
+  //Serial.print(F("dBm "));
+  //Serial.print(F("Packet> "));
+  //Serial.flush();
+  //TXPacketL = sizeof(buff); 
 
-  TXPacketL = sizeof(buff);                                    //set TXPacketL to length of array
-  buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
+  //                                   //set TXPacketL to length of array
+  //buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
 
-  LT.printASCIIPacket(buff, TXPacketL);                        //print the buffer (the sent packet) as ASCII
+  //LT.printASCIIPacket(buff, TXPacketL);                        //print the buffer (the sent packet) as ASCII
 
   //digitalWrite(LED1, HIGH);
-  startmS =  millis();                                         //start transmit timer
+  //startmS =  millis();                                         //start transmit timer
  
   digitalWrite(PIN_D3, HIGH);  // D3 Up
-  TXPacketL = LT.transmit(buff, TXPacketL, 10000, TXpower, WAIT_TX);  //will return 0 if transmit fails, timeout 10 seconds
+  TXPacketL = LT.transmit(buff, 127, 100, TXpower, WAIT_TX);  //will return 0 if transmit fails, timeout 10 seconds
+ 
   digitalWrite(PIN_D3, LOW);  // D3 Down
-
-  if (TXPacketL > 0)
-  {
-    endmS = millis();                                          //packet sent, note end time
-    TXPacketCount++;
-    packet_is_OK();
-  }
-  else
-  {
-    packet_is_Error();                                 //transmit packet returned 0, so there was an error
-  }
+  //delay(50);
+  //if (TXPacketL > 0)
+  //{
+  //  endmS = millis();                                          //packet sent, note end time
+  //  TXPacketCount++;
+ //   packet_is_OK();
+ // }
+  //else
+  //{
+  //  packet_is_Error();                                 //transmit packet returned 0, so there was an error
+ // }
 
   //digitalWrite(LED1, LOW);
-  Serial.println();
-  delay(packet_delay);                                 //have a delay between packets
+  //Serial.println();
+  //delay(packet_delay);                                 //have a delay between packets
 }
 
 
@@ -120,7 +122,7 @@ void setup()
 {
   //pinMode(LED1, OUTPUT);                                   //setup pin as output for indicator LED
   //led_Flash(2, 125);                                       //two quick LED flashes to indicate program start
-  
+
   pinMode(PIN_D3, OUTPUT);
   
   Serial.begin(9600);
